@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djangojs',
+    'shoppinglist',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -44,10 +46,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+    # 'django.middleware.security.SecurityMiddleware',
 )
 
 ROOT_URLCONF = 'shoppinglist.urls'
@@ -70,6 +72,10 @@ TEMPLATES = [
     },
 ]
 
+TEMPLATE_DIRS = os.path.join(
+    '/Users/danielluker/Workspace/ShoppingList/webapp/public/html'
+)
+
 WSGI_APPLICATION = 'shoppinglist.wsgi.application'
 
 
@@ -78,11 +84,31 @@ WSGI_APPLICATION = 'shoppinglist.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django_mongodb_engine',
+        'NAME': 'shopping_list',
+        'USER': 'dluker',
+        'PASSWORD': 'ekw-kJC-h7Y-Hh2',
+        'HOST': 'ds053794.mongolab.com',
+        'PORT': '53794',
+        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': '',
     }
 }
 
+# SESSION_ENGINE = 'mongoengine.django.sessions'
+# Mongo DB settings
+# import mongoengine
+# _MONGODB_USER = 'dluker'
+# _MONGODB_PASSWD = 'ekw-kJC-h7Y-Hh2'
+# _MONGODB_HOST = 'ds053794.mongolab.com:53794'
+# _MONGODB_NAME = 'shopping_list'
+# _MONGODB_DATABASE_HOST = \
+#     'mongodb://%s:%s@%s/%s' \
+#     % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
+# mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
+# AUTHENTICATION_BACKENDS = (
+#     'mongoengine.django.auth.MongoEngineBackend',
+# )
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

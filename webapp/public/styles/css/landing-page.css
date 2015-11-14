@@ -21,6 +21,13 @@ h6 {
     font-weight: 700;
 }
 
+.top-button {
+    vertical-align: middle;
+    display: table-cell;
+    color: #333;
+    margin: 0 0 0 0;
+}
+
 .topnav {
     font-size: 14px; 
 }

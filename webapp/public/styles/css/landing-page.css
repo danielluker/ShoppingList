@@ -21,6 +21,10 @@ h6 {
     font-weight: 700;
 }
 
+.modal-footer {   
+    border-top: 0px; 
+}
+
 .top-button {
     vertical-align: middle;
     display: table-cell;

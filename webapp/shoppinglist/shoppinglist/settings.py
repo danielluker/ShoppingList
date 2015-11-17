@@ -84,12 +84,14 @@ WSGI_APPLICATION = 'shoppinglist.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django_mongodb_engine',
-        'NAME': 'shopping_list',
-        'USER': 'dluker',
-        'PASSWORD': 'ekw-kJC-h7Y-Hh2',
-        'HOST': 'ds053794.mongolab.com',
-        'PORT': '53794',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db',
+        # 'ENGINE': 'django_mongodb_engine',
+        # 'NAME': 'shopping_list',
+        # 'USER': 'dluker',
+        # 'PASSWORD': 'ekw-kJC-h7Y-Hh2',
+        # 'HOST': 'ds053794.mongolab.com',
+        # 'PORT': '53794',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         # 'ENGINE': '',
     }

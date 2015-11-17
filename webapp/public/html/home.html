@@ -4,7 +4,7 @@
 <!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!-->
 <!--<![endif]-->
-<html ng-app=shoppingList.home>
+<html lang="en" ng-app="shoppingList.home">
 {% load staticfiles %}
 <head>
  <meta charset="utf-8">
@@ -47,12 +47,12 @@
     <script src="{% static "js/require.js" %}"></script>
     <script src="{% static "js/load_scripts.js" %}"></script> -->
     <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- <script src="{% static "js/jquery.js" %}"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <script src="{% static "js/lib/jquery.js" %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <!-- <script src="{% static "js/bootstrap.js" %}"></script> -->
+    <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+    <script src="{% static "js/lib/bootstrap.js" %}"></script>
 
     <!-- Libraries -->
     <script src="{% static "js/lib/js-cookie.js"%}"></script>
@@ -62,8 +62,8 @@
     <script src="{% static "js/app/settings.js" %}"></script>
 
     <!-- Angular Library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-    <!-- <script src="{% static "js/angular.js" %}"></script> -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+    <script src="{% static "js/lib/angular.js" %}"></script>
 
     <!-- Angular app script -->
     <script src="{% static "js/app/shoppingList.js" %}"></script>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="shoppingList.index">
 {% load staticfiles %}
 
 <head>
@@ -8,19 +8,20 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="ShoppingList landing page">
 	<meta name="author" content="Daniel F. Luker">
+	<meta name="display_login" content="false">
 
 	<title>ShoppingList</title>
 
 	<!-- Bootstrap Core CSS -->
-	<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-	<!-- <link href="{% static "styles/css/bootstrap.css" %}" rel="stylesheet"> -->
+	<!-- <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"> -->
+	<link href="{% static "styles/css/bootstrap.css" %}" rel="stylesheet">
 
 	<!-- Custom CSS -->
 	<link href="{% static "styles/css/landing-page.css" %}" rel="stylesheet">
 
 	<!-- Custom Fonts -->
-	<!-- <link href="{% static "styles/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css"> -->
-	<link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+	<link href="{% static "styles/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+	<!-- <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"> -->
 
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,16 +33,19 @@
 	<!-- Scripts -->
 
 	<!-- jQuery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- <script src="{% static "js/lib/jquery.js" %}"></script> -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+	<script src="{% static "js/lib/jquery.js" %}"></script>
 
 	<!-- Bootstrap Core JavaScript -->
-	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-	<!-- <script src="{% static "js/lib/bootstrap.js" %}"></script> -->
+	<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+	<script src="{% static "js/lib/bootstrap.js" %}"></script>
 
 	<!-- Angular Library -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
-	<!-- <script src="{% static "js/angular.js" %}"></script> -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+	<script src="{% static "js/lib/angular.js" %}"></script>
+
+	<!-- Libraries -->
+    <script src="{% static "js/lib/js-cookie.js"%}"></script>
 
 	<!-- Angular app script -->
 	<script src="{% static "js/app/shoppingList.js" %}"></script>
@@ -51,7 +55,7 @@
 
 </head>
 
-<body ng-controller="indexCtrl">
+<body>
 	<!-- Navigation -->
 	<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
 		<div class="container topnav">
@@ -127,10 +131,10 @@
 					<hr class="section-heading-spacer">
 					<div class="clearfix"></div>
 					<h2 class="section-heading">Personalized savings<br>Best prices for your shopping</h2>
-					<p class="lead">Create and save your shopping list and find the lowest prices for your combined products!</p>
+					<p class="lead">Create and save your shopping list and find the lowest prices for your combined products.<br>By saving a little on each purchase, you can reach milestones and save every month!</p>
 				</div>
 				<div class="col-lg-5 col-lg-offset-2 col-sm-6">
-					<img class="img-responsive" src="{% static "img/ipad.png" %}" alt="">
+					<img class="img-responsive" src="{% static "img/money_chart.gif" %}" alt="">
 				</div>
 			</div>
 		</div>
@@ -147,7 +151,7 @@
 					<p class="lead">A penny saved is a penny earned! Share your expert knowledge on cheating the system and saving up on your groceries!</p>
 				</div>
 				<div class="col-lg-5 col-sm-pull-6  col-sm-6">
-					<img class="img-responsive" src="{% static "img/dog.png" %}" alt="">
+					<img class="img-responsive" src="{% static "img/notepad_laptop.jpeg" %}" alt="">
 				</div>
 			</div>
 		</div>
@@ -164,7 +168,7 @@
 					<p class="lead">Map out the cheapest stores in your neighbourhood and find the cheapest prices - even the hidden ones...</p>
 				</div>
 				<div class="col-lg-5 col-lg-offset-2 col-sm-6">
-					<img class="img-responsive" src="{% static "img/phones.png" %}" alt="">
+					<img class="img-responsive" src="{% static "img/map.png" %}" alt="">
 				</div>
 			</div>
 		</div>
@@ -226,19 +230,20 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 						<h2 class="text-center">Signup</h2>
 					</div>
-					<div class="modal-body">
-						<form class="form col-md-12 center-block">
+					<div class="modal-body" >
+						<form id="signup_form" class="form col-md-12 center-block" data-ng-submit="validate()" ng-controller="signupCtrl">
 							<div class="form-group">
-								<input type="text" class="form-control input" placeholder="Email">
+								<input type="email" class="form-control required" placeholder="Email" required="" ng-model="user.email" email-check="">
 							</div>
 							<div class="form-group">
-								<input type="password" class="form-control input" placeholder="Password">
+								<input id="new_pass_1" type="password" class="form-control required" placeholder="New Password"  data-ng-model="user.password1" password=""required="">
 							</div>
 							<div class="form-group">
-								<input type="password" class="form-control input" placeholder="Confirm Password">
+								<input id="new_pass_2" type="password" class="form-control required" placeholder="Confirm New Password" required="" ng-model="user.password2" match="user.password1" password="">
+								<span data-ng-show="user.password2.$error.match"></span>
 							</div>
 							<div class="form-group">
-								<button class="btn btn-primary btn-block">Register</button>
+								<input type="submit" class="btn btn-primary btn-block" value="Register">
 								<!-- <span class="pull-right"><a href="#">Register</a></span>
 								<span><a href="#">Need help?</a></span> -->
 							</div>
@@ -260,9 +265,9 @@
 						<h2 class="text-center">Login</h2>
 					</div>
 					<div class="modal-body">
-						<form class="form col-md-12 center-block">
+						<form id="login_form" class="form col-md-12 center-block" onsubmit="validate_login()" action="">
 							<div class="form-group">
-								<input type="text" class="form-control input" placeholder="Email">
+								<input type="email" class="form-control input" placeholder="Email">
 							</div>
 							<div class="form-group">
 								<input type="password" class="form-control input" placeholder="Password">
@@ -283,5 +288,8 @@
 			</div>
 		</div>
 	</footer>
+
+	<!-- Custom JS -->
+	<script src="{% static "js/app/index_script.js" %}"></script>
 </body>
 </html>

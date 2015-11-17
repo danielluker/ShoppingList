@@ -20,7 +20,7 @@ def get_lists(request):
 def save_list(request):
     """ Saves the specified shopping list """
 
-    import pdb; pdb.set_trace()
+    
     # print request
     # if request.method != POST:
     #     raise Exception("Call to this method must be post!", request)

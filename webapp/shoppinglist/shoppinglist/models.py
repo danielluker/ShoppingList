@@ -10,12 +10,9 @@ from mongoengine import ListField
 from djangotoolbox.fields import DictField
 
 
-class User(models.Model):
+class UserObject(models.Model):
     """ Defines the main user object stored in the database """
     unique_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=16)
-    email = models.EmailField()
     shoppinglists = ListField()
 
 

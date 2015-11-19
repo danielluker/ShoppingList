@@ -4,7 +4,9 @@
     @date 11/10/2015
 """
 import json
+from django.http import HttpResponseRedirect
 from shoppinglist.models import ShoppingList
+from shoppinglist.lib.util import JsonResponse
 from . import views
 
 POST = "POST"
@@ -19,27 +21,24 @@ def get_lists(request):
 
 def save_list(request):
     """ Saves the specified shopping list """
-
-    
-    # print request
-    # if request.method != POST:
-    #     raise Exception("Call to this method must be post!", request)
+    if request.method != POST:
+        raise Exception("Call to this method must be post!", request)
     data = json.loads(request.POST.get('bundle'))
     received_list = ShoppingList(
         name=data['name'],
         numberOfItems=data['numberOfItems'],
         contents=data['contents'],
     )
-    # received_list.name = data["name"]
-    # for key in data:
-    #     received_list.contents[key] = data[key]
-    # received_list.numberOfItems = data["numberOfItems"]
     received_list.save()
-
-    print("Successfully saved object to database")
-    # raise Exception("", data)
-    # print(request.POST)
-    # user = new User()
-
-    # return request
     return views.home(request)
+
+
+def check_email(request):
+    """ Checks for the existence of an email address """
+    email_check = request.POST.get('email')
+    if email_check is None:
+        # return JsonResponse({'valid': False})
+        return HttpResponseRedirect('/')
+    # result = User.objects(email__exact=email_check).next() is not None
+    result = True
+    return JsonResponse({'exists': result})

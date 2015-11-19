@@ -2,36 +2,82 @@
 
 // var ShoppingListClass = require('objects/shoppingList');
 
-var self = angular.module('shoppingList.home', []);
+var app = angular.module('shoppingList.home', []);
 
-self.config(function($interpolateProvider) {
+app.config(function($interpolateProvider) {
     $interpolateProvider.startSymbol('{$');
     $interpolateProvider.endSymbol('$}');
-})
-.controller('dashCtrl', ['$scope', function($scope) {
-	$scope.shoppingList = new ShoppingList("list1");
+});
 
-	$scope.postDummyData = function() {
-		$scope.shoppingList.addItem("pizza");
-		$scope.shoppingList.addItem("tortillas");
-		$scope.shoppingList.addItem("drink");
-		console.log("I'm being fired up :)");
-		console.log("bundle = ", $scope.shoppingList);
-		// $.ajax({
-			// type : 'POST',
-			// url : 'save', 
-			// data : {
-			// 	'bundle' : JSON.stringify($scope.shoppingList),
-				// 'X-CSRFToken' : csrftoken,
-			// },
-			// beforeSend : function(xhr){
-			// 	xhr.setRequestHeader('X-CSRFToken', csrftoken);
-			// },
-		// });
-		$.post('save/', {
-			'bundle' : JSON.stringify($scope.shoppingList),
-		});
-	};
+// app.controller('dashCtrl', ['$scope', function($scope) {
+// 	$scope.shoppingList = new ShoppingList("list1");
 
+// 	$scope.postDummyData = function() {
+// 		$scope.shoppingList.addItem("pizza");
+// 		$scope.shoppingList.addItem("tortillas");
+// 		$scope.shoppingList.addItem("drink");
+// 		$.post('save/', {
+// 			'bundle' : JSON.stringify($scope.shoppingList),
+// 		});
+// 	};
+// }]);
 
+app.controller('sidebarCtrl', ['$scope', function($scope) {
+
+	$scope.controls = [
+		{
+			name: 'Test 1',
+			link: '#',
+		},
+		{
+			name: 'Test 2',
+			link: '#',
+			subcontrols: [
+				{
+					name: 'test1',
+					link: '#',
+				},
+				{
+					name: 'test2',
+					link: '#',
+				}
+			]
+		},
+		{
+			name: 'Test 3',
+			link: '#',
+		},
+	]
+}]);
+
+app.controller('messagesCtrl', ['$scope', function($scope) { 
+
+	console.log("instantiating messagesCtrl controller")
+
+	$scope.messages = [
+		{
+			from: 'John Smith', 
+			date: 'Yesterday', 
+			content:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+		},
+		{
+			from: 'Maria Gonzalez',
+			date: 'Tuesday',
+			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+		},
+		{
+			from: 'Daniel Perez',
+			date: '11/13/2015',
+			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+		},
+	];
+}]);
+
+app.controller('tasksCtrl', ['$scope', function($scope) {
+}]);
+
+app.controller('alertsCtrl', ['$scope', function($scope) {
 }]);

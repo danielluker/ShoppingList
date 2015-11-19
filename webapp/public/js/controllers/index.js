@@ -6,9 +6,15 @@ var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z
 var flag1 = false;
 
 var valid = {
-	email : false,
-	new_pass_1 : false,
-	new_pass_2 : false,
+    new_email: false,
+    old_email: false,
+    password: false,
+    password1: false,
+    password2: false,
+}
+
+var data = {
+
 }
 
 app.directive('password', function() {
@@ -17,14 +23,19 @@ app.directive('password', function() {
         link: function(scope, elem, attrs, ctrl) {
             ctrl.$validators.password = function(modelValue, viewValue) {
                 var isValid = passwordRegex.test(viewValue)
-                if (viewValue.length > 1 && !valid) {
+                if(viewValue == undefined)
+                	return false;
+                if (viewValue.length > 0 && !isValid) {
                     flag1 = true;
-                    elem.css("background-color", "rgba(255, 0, 0, 0.3)")                 
+                    elem.css("background-color", "rgba(255, 0, 0, 0.3)")
                 } else {
                     flag1 = false;
                     elem.css("background-color", "white")
                 }
                 valid[elem.attr('id')] = isValid;
+                // ugly fix
+                data[elem.attr('id')] = viewValue
+                //
                 return (isValid);
             };
         },
@@ -36,7 +47,7 @@ app.directive('match', [function() {
         require: 'ngModel',
         link: function(scope, elem, attrs, ctrl) {
             ctrl.$validators.match = function(modelValue, viewValue) {
-                if (viewValue != $("#new_pass_1").val() && (!flag1 && viewValue.length > 1)) {
+                if (viewValue != $("#password1").val() && (!flag1 && viewValue.length > 1)) {
                     elem.css("background-color", "rgba(255, 102, 0, 0.3)");
                     valid[elem.attr('id')] = false;
                 }
@@ -46,90 +57,126 @@ app.directive('match', [function() {
 }]);
 
 app.directive('emailCheck', [function() {
-	return {
-		require: 'ngModel',
-		link: function(scope, elem, attrs, ctrl) {
-			ctrl.$validators.emailCheck = function(modelValue, viewValue) {
-				if (viewValue.length > 0 && !emailRegex.test(viewValue)) {
-					elem.css("background-color", "rgba(255, 0, 0, 0.3)")
-					valid.email = false;
-				}
-				else {
-					elem.css("background-color", "white")
-					valid.email = true;
-				}
-			}
-		}
-	}
+    return {
+        require: 'ngModel',
+        link: function(scope, elem, attrs, ctrl) {
+            ctrl.$validators.emailCheck = function(modelValue, viewValue) {
+                if (viewValue.length > 0 && !emailRegex.test(viewValue)) {
+                    elem.css("background-color", "rgba(255, 0, 0, 0.3)")
+                    valid[elem.attr('id')] = false;
+                } else {
+                    elem.css("background-color", "white")
+                    valid[elem.attr('id')] = true;
+                }
+                // ugly fix
+                data[elem.attr('id')] = viewValue
+                //
+            }
+        }
+    }
 }]);
 
-// app.controller(
-// 	'indexCrtl', [
-// 		function() {
+app.directive('usernameCheck', [function() {
+    return {
+        require: 'ngModel',
+        link: function(scope, elem, attrs, ctrl) {
+            ctrl.$asyncValidators.usernameCheck = function(modelValue, viewValue) {
+                console.log("yo")
+                var inputEmail = viewValue;
+                return $.post("/email", {
+                        'email': inputEmail,
+                    }, function() {
+                        // on success
+                    })
+                    .done(function() {
+                        // second on success
+                    })
+                    .fail(function() {
+                        return $q.reject("email already exists")
+                    })
+                    .always(function() {
+                        // finished
+                    })
+            }
+        }
+    }
+}])
 
-// 		}
-// 	]
-// );
+app.controller(
+    'loginCtrl', ['$scope',
+        function($scope) {
+            $scope.user = {
+                email: "",
+                password: "",
+            }
+            $scope.usernameCheck = function() {
+                var user_exists = false; // stub for now
+                // if(user_exists) {
+                // $('#new_email')
+                // }
+                return user_exists
+            }
+            $scope.validate = function() {
+                return valid.password && valid.old_email;
+            }
+            $scope.login = function() {
+            	$scope.user.email = data.old_email;
+            	$scope.user.password = data.password;
+            	// data = {}
+            	$.post(
+            		'login/',
+            		{ user: JSON.stringify($scope.user) },
+            		function(result) {
+            			if(result.valid)
+            				window.location.replace(result['next'])
+            		}
+            	)
+            }
+        }
+    ]
+);
 
 app.controller(
     'signupCtrl', ['$scope',
         function($scope) {
-
             $scope.user = {
                 email: "",
                 password1: "",
                 password2: "",
                 getPassword: function() {
-                    return password1 == password2 ? password1 : null;
+                    return $scope.user.password1 == $scope.user.password2 ? $scope.user.password1 : null;
                 }
             }
-
-            /*
-             * These validation functions are, for now, performed by HTML5
-             */
-            $scope.validate_login = function() {
-                // $("#login_form")
-                return true;
+            $scope.apply = function() {
+            	$
             }
-
-            $scope.validate_signup = function() {
-                // $("#signup_form")
-                return true;
-            }
-
-            /* 
-             * Main password validation function
-             */
-            $scope.validate_new_password = function(id) {
-                // console.log("checking passwords");
-                // var name = "#new_pass_" + id;
-                // // if(! $(name).value.match('\^[a-z,A-Z,0-9,!@#$%^&*_-]{8,16}$\'))
-                // // 	$
-                // var other = "#new_pass_" + (id > 1 ? 1 : 2);
-                // if($(name).val() != $(other).val()){
-                // 	$(name).css("{color : red}");
-                // 	$(other).css("{color : red}");
-                // 	console.log("Don't match")
-                // }
-                // else
-                // 	console.log("match");
-                // console.log($(name).val())
-                // console.log($(other).val())
-            }
-
             $scope.validate = function() {
-            	for(var a in valid)
-            		if(!valid[a])
-            			return false;
-            	return true
+                return valid.new_email && valid.password1 && valid.password2;
             }
-
-            $scope.printValue = function() {
-                console.log("Printing values")
-                console.log($scope.user.email)
-                console.log($scope.user.password1)
-                console.log($scope.user.password2)
-                console.log(valid)
+            $scope.usernameCheck = function() {
+                var user_exists = false;
+                // if(!user_exists) {
+                // }
+                return !user_exists
+            }
+            $scope.register = function() {
+            	$scope.user.email = data.new_email;
+            	$scope.user.password1 = data.password1;
+            	$scope.user.password2 = data.password2;
+            	// data = {}
+                $.post(
+                    'register/', 
+                    { 
+                    	user: JSON.stringify({
+                            email: $scope.user.email,
+                            password: $scope.user.getPassword(),
+                        }),
+                    },
+                    function(result) {
+                    	if(result.valid)
+                    		window.location.replace(result['next'])
+                    }
+                )
             }
         }
     ]

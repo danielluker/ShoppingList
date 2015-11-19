@@ -16,8 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from . import views
-from . import requests
+from . import views, requests, auth
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
@@ -26,4 +25,7 @@ urlpatterns = [
     url(r'^home/save/', requests.save_list),
     url(r'^home/get_lists/', requests.get_lists),
     url(r'^djangojs/', include('djangojs.urls')),
+    url(r'^email/', requests.check_email),
+    url(r'^register/', auth.register_user),
+    url(r'^login/', auth.login_user),
 ]

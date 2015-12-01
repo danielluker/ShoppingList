@@ -52,7 +52,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.security.SecurityMiddleware',
 )
 
+
 ROOT_URLCONF = 'shoppinglist.urls'
+
+LOGIN_URL = 'login/'
 
 TEMPLATES = [
     {
@@ -84,8 +87,12 @@ WSGI_APPLICATION = 'shoppinglist.wsgi.application'
 
 DATABASES = {
     'default': {
+
+        # """ Offline dev """
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db',
+
+        # """ Online dev """
         # 'ENGINE': 'django_mongodb_engine',
         # 'NAME': 'shopping_list',
         # 'USER': 'dluker',

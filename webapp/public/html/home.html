@@ -21,13 +21,11 @@
 
     <!-- Custom CSS -->
     <link href="{% static "styles/css/landing-page.css" %}" rel="stylesheet">
-
+    <link href="{% static "styles/css/home.css" %}" rel="stylesheet">
+    <link href="{% static "styles/css/sticky-footer.css" %}" rel="stylesheet">
 
     <!-- Timeline CSS -->
     <link href="{% static "styles/css/timeline.css" %}" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="{% static "styles/css/sb-admin-2.css" %}" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
@@ -41,54 +39,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <!-- Scripts -->
-    <!-- {% load js %}
-    {% django_js_init %}
-    <script src="{% static "js/config.js" %}"></script>
-    <script src="{% static "js/require.js" %}"></script>
-    <script src="{% static "js/load_scripts.js" %}"></script> -->
-
-    <!-- jQuery -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
-    <script src="{% static "js/lib/jquery.js" %}"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
-    <script src="{% static "js/lib/bootstrap.js" %}"></script>
-
-    <!-- Libraries -->
-    <script src="{% static "js/lib/js-cookie.js"%}"></script>
-
-    <!-- Custom JS -->
-    <script src="{% static "js/controllers/objects/shoppingList.js" %}"></script>
-    <script src="{% static "js/controllers/objects/message.js" %}"></script>
-    <script src="{% static "js/app/settings.js" %}"></script>
-
-
-    <!-- Angular Library -->
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
-    <script src="{% static "js/lib/angular.js" %}"></script>
-
-    <!-- Angular app script -->
-    <script src="{% static "js/app/shoppingList.js" %}"></script>
-
-    <!-- Angular frontend controller -->
-    <script src="{% static "js/controllers/home.js" %}"></script>
+    
 
 </head>
-<body>
+<body ng-controller="homeCtrl">
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
         <div class="container topnav">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <!-- <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span> -->
-                </button>
                 <button type="button" class="navbar-brand topnav btn btn-sm" style="background-color: transparent">
                     <a href="/">ShoppingList</a>
                 </button>
@@ -99,20 +59,20 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
-                        <div ng-contoller="messagesCtrl">
-                            {$ messages $}
                             <ul class="dropdown-menu dropdown-messages" id="daniel">
                                 <div ng-repeat="message in messages">
                                     <li>
-                                        <a href="#">
-                                            <div>
+                                        <div class="message-body">
+                                            <div class="message-header">
                                                 <strong>{$ message.from $}</strong>
                                                 <span class="pull-right text-muted">
                                                     <em>{$ message.date $}</em>
                                                 </span>
                                             </div>
-                                            <div>{$ message.content $}</div>
-                                        </a>
+                                            <div class="message-content">
+                                                {$ message.content $}
+                                            </div>
+                                        </div>
                                     </li>
                                     <li class="divider"></li>
                                 </div>
@@ -123,7 +83,6 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div>
                         <!-- /.dropdown-messages -->
                     </li>
                     <!-- /.dropdown -->
@@ -131,25 +90,23 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
-                        <ul ng-controller="tasksCtrl" class="dropdown-menu dropdown-tasks">
-                            <div ng-repeat="task in tasks">
-                                <li>
-                                    <a href="#">
-                                        <div>
-                                            <p>
-                                                <strong>{$ task.title $}</strong>
-                                                <span class="pull-right text-muted">{$ task.completion $}</span>
-                                            </p>
-                                            <div class="progress progress-striped active">
-                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                                    <span class="sr-only">{$ task.status $}</span>
-                                                </div>
+                        <ul class="dropdown-menu dropdown-tasks">
+                            <li ng-repeat="task in tasks">
+                                <a href="#">
+                                    <div>
+                                        <p>
+                                            <strong>{$ task.title $}</strong>
+                                            <span class="pull-right text-muted">{$ task.completion $}</span>
+                                        </p>
+                                        <div class="progress progress-striped active">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                                <span class="sr-only">{$ task.status $}</span>
                                             </div>
                                         </div>
-                                    </a>
-                                </li>
-                                <li class="divider"></li>
-                            </div>
+                                    </div>
+                                </a>
+                                <div class="divider"></div>
+                            </li>
                             <li>
                                 <a class="text-center" href="#">
                                     <strong>See All Tasks</strong>
@@ -164,7 +121,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
                         </a>
-                        <ul ng-controller="alertsCtrl" class="dropdown-menu dropdown-alerts">
+                        <ul class="dropdown-menu dropdown-alerts">
                             <div ng-repeat="alert in alerts">
                                 <li>
                                     <a href="#">
@@ -196,7 +153,7 @@
                             <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
                             </li>
                             <li class="divider"></li>
-                            <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            <li><a ng-click="logout()" id='test'><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                             </li>
                         </ul>
                         <!-- /.dropdown-user -->
@@ -216,7 +173,7 @@
         <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 0">
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
-                    <ul ng-controller="sidebarCtrl" class="nav" id="side-menu">
+                    <ul class="nav" id="side-menu">
                         <li class="sidebar-search">
                             <div class="input-group custom-search-form">
                                 <input type="text" class="form-control" placeholder="Search...">
@@ -228,15 +185,15 @@
                             </div>
                             <!-- /input-group -->
                         </li>
-                        {$ controls $}
                         <li ng-repeat="control in controls">
-                            <a href="{$ control.target $}">
+                            <a id='foo' href="{$ control.target $}">
                                 <i class="fa fa-dashboard fa-fw"></i>
-                                <span ng-class="{'fa arrow': Object.keys(controls.subcontrols).length > 0}">{$ control.name $}</span>
+                                <span ng-class="{'arrow': Object.keys(controls.subcontrols).length > 0}">
+                                    {$ control.name $}
+                                </span>
                             </a>
-
                             <ul class="nav nav-second-level">
-                                <li ng-repeat="subcontrol in subcontrols">
+                                <li ng-repeat="subcontrol in control.subcontrols">
                                     <a href="{$ subcontrol.target $}">{$ subcontrol.name $}</a>
                                 </li>
                             </ul>
@@ -262,28 +219,50 @@
             <div class="row">
                 <!-- Large controls at the top -->
                 <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary">
+                    <div class="panel panel-yellow">
                         <div class="panel-heading">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <i class="fa fa-comments fa-5x"></i>
+                                    <i class="fa fa-shopping-cart fa-5x"></i>
                                 </div>
                                 <div class="col-xs-9 text-right">
-                                    <div class="huge">26</div>
-                                    <div>New Comments!</div>
+                                    <div id="new_items" class="huge">0</div>
+                                    <div>Items in list</div>
                                 </div>
                             </div>
                         </div>
-                        <a href="#">
+<!--                         <a href="#">
                             <div class="panel-footer">
                                 <span class="pull-left">View Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
-                        </a>
+                        </a> -->
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row" ng-click="toggleMessageCentre()">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-5x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div id="messageCount" class="huge">0</div>
+                                    <div>New Messages!</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <a href="#">
+                            <div class="panel-footer">
+                                <span class="pull-left">View Details</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a> -->
+                    </div>
+                </div>
+<!--            <div class="col-lg-3 col-md-6">
                     <div class="panel panel-green">
                         <div class="panel-heading">
                             <div class="row">
@@ -302,30 +281,8 @@
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-yellow">
-                        <div class="panel-heading">
-                            <div class="row">
-                                <div class="col-xs-3">
-                                    <i class="fa fa-shopping-cart fa-5x"></i>
-                                </div>
-                                <div class="col-xs-9 text-right">
-                                    <div class="huge">124</div>
-                                    <div>New Orders!</div>
-                                </div>
-                            </div>
-                        </div>
-                        <a href="#">
-                            <div class="panel-footer">
-                                <span class="pull-left">View Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
+                        </a>                                                -->
+<!--                </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="panel panel-red">
@@ -346,16 +303,16 @@
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
-                        </a>
+                        </a> 
                     </div>
-                </div>
+                </div> -->
             </div>
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-8">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bar-chart-o fa-fw"></i> Heading
+                            <i class="fa fa-bar-chart-o fa-fw"></i>Current list
                             <div class="pull-right">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -363,22 +320,60 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu">
-                                        <li><a href="#">Action</a>
-                                        </li>
-                                        <li><a href="#">Another action</a>
-                                        </li>
-                                        <li><a href="#">Something else here</a>
-                                        </li>
+                                        <li ng-click="deleteCurrentList()">Delete List</li>
+                                        <li ng-click="createNewList()">New List</li>
                                         <li class="divider"></li>
-                                        <li><a href="#">Separated link</a>
-                                        </li>
+                                        <li>My Lists</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div class="panel-body" ng-click="postDummyData()">
-                            <div>Click me to send dummy data!<p>Also, {$ "testing" + " angular" $}</div>
+                        <div class="panel-body">
+                            <!-- <div>Click me to send dummy data!<p>Also, {$ "testing" + " angular" $}</div> -->
+                            <h2>{$ currentList.name $}</h2>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Item Name</th>
+                                        <th></th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in currentList">
+                                        <td><input type="checkbox"></td>
+                                        <td colspan="2">{$ item.name $}</td>
+                                        <td>{$ item.price $}</td>
+                                        <td>{$ item.quantity $}</td>
+                                        <td><button class="btn btn-default pull-right" style="border-radius:30%;" tabindex="0" ng-click="removeItem(item)">x</button>
+                                    </tr>
+                                    <tr>
+                                        <form ng-submit="addItem()">
+                                            <td></td>
+                                            <td colspan="2">
+                                                <input type="text" class="form-control" placeholder="item name" ng-model="itemName" id="itemName" ng-required="true">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" ng-model="itemPrice">
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" placeholder="#" ng-model="itemQuantity">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-default pull-right" style="border-radius:30%;">
+                                                    <span>+</span>
+                                                </button>
+                                            </td>
+                                        </form>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -408,78 +403,11 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-hover table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Date</th>
-                                                    <th>Time</th>
-                                                    <th>Amount</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>3326</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>3:29 PM</td>
-                                                    <td>$321.33</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3325</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>3:20 PM</td>
-                                                    <td>$234.34</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3324</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>3:03 PM</td>
-                                                    <td>$724.17</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3323</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>3:00 PM</td>
-                                                    <td>$23.71</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3322</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>2:49 PM</td>
-                                                    <td>$8345.23</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3321</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>2:23 PM</td>
-                                                    <td>$245.12</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3320</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>2:15 PM</td>
-                                                    <td>$5663.54</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3319</td>
-                                                    <td>10/21/2013</td>
-                                                    <td>2:13 PM</td>
-                                                    <td>$943.45</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- /.table-responsive -->
-                                </div>
-                                <!-- /.col-lg-4 (nested) -->
-                            </div>
-                            <!-- /.row -->
+                            
                         </div>
                         <!-- /.panel-body -->
                     </div>
+
                     <!-- /.panel -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -488,64 +416,17 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <ul class="timeline">
-                                <li>
+                                <li ng-class-even="'timeline-inverted'" ng-repeat="element in timeline">
                                     <div class="timeline-badge"><i class="fa fa-check"></i>
                                     </div>
                                     <div class="timeline-panel">
                                         <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                            <p><small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small>
+                                            <h4 class="timeline-title">{$ element.title $}</h4>
+                                            <p><small class="text-muted"><i class="fa fa-clock-o"></i>{$ element.date $}</small>
                                             </p>
                                         </div>
                                         <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae, officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="timeline-inverted">
-                                    <div class="timeline-badge warning"><i class="fa fa-credit-card"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="timeline-badge danger"><i class="fa fa-bomb"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus numquam facilis enim eaque, tenetur nam id qui vel velit similique nihil iure molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="timeline-inverted">
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="timeline-badge info"><i class="fa fa-save"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis minus modi quam ipsum alias at est molestiae excepturi delectus nesciunt, quibusdam debitis amet, beatae consequuntur impedit nulla qui! Laborum, atque.</p>
+                                            <p>{$ element.content $}</p>
                                             <hr>
                                             <div class="btn-group">
                                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -566,28 +447,6 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi fuga odio quibusdam. Iure expedita, incidunt unde quis nam! Quod, quisquam. Officia quam qui adipisci quas consequuntur nostrum sequi. Consequuntur, commodi.</p>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="timeline-inverted">
-                                    <div class="timeline-badge success"><i class="fa fa-graduation-cap"></i>
-                                    </div>
-                                    <div class="timeline-panel">
-                                        <div class="timeline-heading">
-                                            <h4 class="timeline-title">Lorem ipsum dolor</h4>
-                                        </div>
-                                        <div class="timeline-body">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt obcaecati, quaerat tempore officia voluptas debitis consectetur culpa amet, accusamus dolorum fugiat, animi dicta aperiam, enim incidunt quisquam maxime neque eaque.</p>
-                                        </div>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                         <!-- /.panel-body -->
@@ -598,59 +457,27 @@
                 <div class="col-lg-4">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-bell fa-fw"></i> Notifications Panel
+                            <i class="fa fa-shopping-basket fa-fw"></i> My Lists
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="list-group">
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="pull-right text-muted small"><em>4 minutes ago</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="pull-right text-muted small"><em>12 minutes ago</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
-                                    <span class="pull-right text-muted small"><em>27 minutes ago</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-tasks fa-fw"></i> New Task
-                                    <span class="pull-right text-muted small"><em>43 minutes ago</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                    <span class="pull-right text-muted small"><em>11:32 AM</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-bolt fa-fw"></i> Server Crashed!
-                                    <span class="pull-right text-muted small"><em>11:13 AM</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-warning fa-fw"></i> Server Not Responding
-                                    <span class="pull-right text-muted small"><em>10:57 AM</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-shopping-cart fa-fw"></i> New Order Placed
-                                    <span class="pull-right text-muted small"><em>9:49 AM</em>
-                                    </span>
-                                </a>
-                                <a href="#" class="list-group-item">
-                                    <i class="fa fa-money fa-fw"></i> Payment Received
-                                    <span class="pull-right text-muted small"><em>Yesterday</em>
-                                    </span>
-                                </a>
+                                <span ng-repeat="list in myLists">
+                                    <a class="list-group-item" ng-click="populateList(list)">
+                                        <span>
+                                            <i class="fa fa-shopping-cart fa-fw"></i>
+                                        </span>
+                                        <span>
+                                            {$ list.name $}
+                                        </span>
+                                        <span class="pull-right text-muted small">
+                                            <em>{$ list.size $}</em>
+                                        </span>
+                                    </a>
+                                </span>
                             </div>
                             <!-- /.list-group -->
-                            <a href="#" class="btn btn-default btn-block">View All Alerts</a>
+                            <!-- <a href="alerts/" class="btn btn-default btn-block">View All Alerts</a> -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -707,64 +534,19 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <ul class="chat">
-                                <li class="left clearfix">
-                                    <span class="chat-img pull-left">
-                                        <!-- <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" /> -->
+                                <li ng-repeat="message in chatMessages" class="left clearfix">
+                                    <span ng-class-even="'chat-img pull-left'" ng-class-odd="'chat-img pull-right'">
+                                        <!-- <img src={$ message.from.avatar $}src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" /> -->
                                     </span>
                                     <div class="chat-body clearfix">
                                         <div class="header">
-                                            <strong class="primary-font">Jack Sparrow</strong>
+                                            <strong class="primary-font">{$ message.from.name $}</strong>
                                             <small class="pull-right text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 12 mins ago
+                                                <i class="fa fa-clock-o fa-fw"></i>{$ message.date $}
                                             </small>
                                         </div>
                                         <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="right clearfix">
-                                    <span class="chat-img pull-right">
-                                        <!-- <img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" /> -->
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <small class=" text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 13 mins ago</small>
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="left clearfix">
-                                    <span class="chat-img pull-left">
-                                        <!-- <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar" class="img-circle" /> -->
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">Jack Sparrow</strong>
-                                            <small class="pull-right text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 14 mins ago</small>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="right clearfix">
-                                    <span class="chat-img pull-right">
-                                        <!-- <img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar" class="img-circle" /> -->
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <small class=" text-muted">
-                                                <i class="fa fa-clock-o fa-fw"></i> 15 mins ago</small>
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.
+                                            {$ message.content $}
                                         </p>
                                     </div>
                                 </li>
@@ -790,8 +572,90 @@
             <!-- /.row -->
         </div>
         <!-- /#page-wrapper -->
-
+        <div class="push"></div>
     </div>
     <!-- /#wrapper -->
+    <div class="footer" ng-show="show_message_centre" >
+        <div class="container">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-shopping-cart fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div id="new_items" class="huge">0</div>
+                                <div>Items in list</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row" ng-click="openMessages()">
+                            <div class="col-xs-3">
+                                <i class="fa fa-comments fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div id="messageCount" class="huge">0</div>
+                                <div>New Messages!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- {% load js %}
+    {% django_js_init %}
+    <script src="{% static "js/config.js" %}"></script>
+    <script src="{% static "js/require.js" %}"></script>
+    <script src="{% static "js/load_scripts.js" %}"></script> -->
+
+    <!-- jQuery -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <script src="{% static "js/lib/jquery.js" %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+    <script src="{% static "js/lib/bootstrap.js" %}"></script>
+
+    <!-- Libraries -->
+    <script src="{% static "js/lib/js-cookie.js"%}"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static "js/controllers/objects/shoppingList.js" %}"></script>
+    <script src="{% static "js/controllers/objects/message.js" %}"></script>
+    <script src="{% static "js/app/settings.js" %}"></script>
+
+
+    <!-- Angular Library -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+    <script src="{% static "js/lib/angular.js" %}"></script>
+
+    <!-- Angular app script -->
+    <script src="{% static "js/app/shoppingList.js" %}"></script>
+
+    <!-- Angular frontend controller -->
+    <script src="{% static "js/controllers/home.js" %}"></script>
 </body>
 </html>

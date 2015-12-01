@@ -5,13 +5,14 @@
 """
 import json
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 # from django.http import HttpResponseRedirect
 from shoppinglist.lib.util import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 # from . import views
 
 
+@ensure_csrf_cookie
 def register_user(request):
     """ Saves the user onto the database """
     usrnm, password, email = retrieve_user_password_email(request)
@@ -70,3 +71,9 @@ def retrieve_user_password(request):
     """ Helper method to return just the username and the password """
     password, email = retrieve_password_email(request)
     return email.split("@")[0], password
+
+
+def logout_user(request):
+    """ Logs out the current user and returns the home page """
+    logout(request)
+    return JsonResponse({'next': '/'})

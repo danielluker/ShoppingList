@@ -43,11 +43,16 @@ function csrfSafeMethod(method) {
 var csrftoken = Cookies.get('csrftoken');
 console.log("csrftoken = ", csrftoken);
 console.log("applying csrf protection");
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+if(csrftoken == undefined) {
+    alert("Cannot receive the csrf token. Please contact the system admin.\n\n\n\tError 10");
+}
+else 
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
         }
-    }
-});
+    });
+
 

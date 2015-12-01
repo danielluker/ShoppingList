@@ -10,6 +10,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 
+# DEBUG
+# import pdb
+
 # import datetime
 
 
@@ -23,6 +26,11 @@ def initial(request, show_login=False):
     return response
 
 
+def initial_login(request):
+    """ Returns to the homepage, and shows login modal """
+    return initial(request, True)
+
+
 @ensure_csrf_cookie
 def home(request):
     """ Once session has been verified, displays the homepage """
@@ -30,4 +38,8 @@ def home(request):
         response = HttpResponseRedirect('/')
         response.set_cookie("show_login", "true", 3600)
         return response
+    context = RequestContext(request)
+    # pdb.set_trace()
+    print("csrf token (string) is")
+    print(str(context.get('csrf_token').join("  ")))
     return render_to_response('home.html', RequestContext(request))

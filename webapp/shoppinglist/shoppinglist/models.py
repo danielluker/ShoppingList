@@ -18,7 +18,7 @@ class UserObject(models.Model):
 
 class ShoppingList(models.Model):
     """ Defines a list of items """
-    unique_id = models.AutoField(primary_key=True)
+    # unique_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=32)
     numberOfItems = models.IntegerField()
     contents = DictField()

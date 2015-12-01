@@ -1,6 +1,6 @@
 var app = angular.module('shoppingList.index', []);
 
-var passwordRegex = /^[a-z,A-Z,0-9,!@#$%^&*_-]{8,16}$/;
+var passwordRegex = /^[a-zA-Z0-9,.!@#$%^&*_-]{8,16}$/;
 var emailRegex = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/
 
 var flag1 = false;
@@ -11,6 +11,11 @@ var valid = {
     password: false,
     password1: false,
     password2: false,
+}
+
+var email_registered = {
+    new_email: true,
+    old_email: false,
 }
 
 var data = {
@@ -61,6 +66,9 @@ app.directive('emailCheck', [function() {
         require: 'ngModel',
         link: function(scope, elem, attrs, ctrl) {
             ctrl.$validators.emailCheck = function(modelValue, viewValue) {
+                if(viewValue.length == 0 && scope.meta != "loginCtrl") {
+                    scope.email_registered = false;
+                }
                 if (viewValue.length > 0 && !emailRegex.test(viewValue)) {
                     elem.css("background-color", "rgba(255, 0, 0, 0.3)")
                     valid[elem.attr('id')] = false;
@@ -81,7 +89,6 @@ app.directive('usernameCheck', [function() {
         require: 'ngModel',
         link: function(scope, elem, attrs, ctrl) {
             ctrl.$asyncValidators.usernameCheck = function(modelValue, viewValue) {
-                console.log("yo")
                 var inputEmail = viewValue;
                 return $.post("/email", {
                         'email': inputEmail,
@@ -105,30 +112,46 @@ app.directive('usernameCheck', [function() {
 app.controller(
     'loginCtrl', ['$scope',
         function($scope) {
+            $scope.meta = "loginCtrl"
             $scope.user = {
                 email: "",
                 password: "",
             }
-            $scope.usernameCheck = function() {
-                var user_exists = false; // stub for now
-                // if(user_exists) {
-                // $('#new_email')
-                // }
-                return user_exists
+
+            /*
+             * This flag is to toggle the warning message
+             */
+            $scope.email_registered = true;
+
+            /* 
+             * This flag is to prevent the login button from becoming 
+             * valid if the AJAX call to check the existence of the 
+             * email in the database takes too long
+             */
+            $scope.email_registered_flag = false;
+
+            $scope.usernameCheck = function(mode) {
+                var inputEmail = $('#old_email').val()
+                $.post('/email/', {
+                    'email': inputEmail,
+                }, function(result) {
+                    $scope.email_registered = $scope.email_registered_flag = result.exists;
+                    console.log("email_registered", $scope.email_registered)
+                    console.log("email_registered_flag", $scope.email_registered_flag)
+                });
             }
             $scope.validate = function() {
-                return valid.password && valid.old_email;
+                return valid.password && valid.old_email && $scope.email_registered && $scope.email_registered_flag;
             }
             $scope.login = function() {
             	$scope.user.email = data.old_email;
             	$scope.user.password = data.password;
-            	// data = {}
             	$.post(
             		'login/',
             		{ user: JSON.stringify($scope.user) },
             		function(result) {
             			if(result.valid)
-            				window.location.replace(result['next'])
+            				window.location.href = result['next']
             		}
             	)
             }
@@ -139,6 +162,7 @@ app.controller(
 app.controller(
     'signupCtrl', ['$scope',
         function($scope) {
+            $scope.meta = "signupCtrl"
             $scope.user = {
                 email: "",
                 password1: "",
@@ -147,23 +171,28 @@ app.controller(
                     return $scope.user.password1 == $scope.user.password2 ? $scope.user.password1 : null;
                 }
             }
-            $scope.apply = function() {
-            	$
-            }
+            $scope.email_registered = false;
+
+            /* This flag is to prevent the login button from becoming 
+             * valid if the AJAX call to check the existence of the 
+             * email in the database takes too long
+             */
+            $scope.email_registered_flag = true;
             $scope.validate = function() {
-                return valid.new_email && valid.password1 && valid.password2;
+                return valid.new_email && valid.password1 && valid.password2 && (!$scope.email_registered) && (!scope.email_registered_flag);
             }
-            $scope.usernameCheck = function() {
-                var user_exists = false;
-                // if(!user_exists) {
-                // }
-                return !user_exists
+            $scope.usernameCheck = function(mode) {
+                var inputEmail = $('#new_email').val()
+                $.post('/email/', {
+                    'email': inputEmail,
+                }, function(result) {
+                    $scope.email_registered = $scope.email_registered_flag = result.exists; 
+                });
             }
             $scope.register = function() {
             	$scope.user.email = data.new_email;
             	$scope.user.password1 = data.password1;
             	$scope.user.password2 = data.password2;
-            	// data = {}
                 $.post(
                     'register/', 
                     { 
@@ -174,10 +203,16 @@ app.controller(
                     },
                     function(result) {
                     	if(result.valid)
-                    		window.location.replace(result['next'])
+                    		window.location.href = result['next']
                     }
                 )
             }
         }
     ]
 );
+
+// Helper functions
+
+var setEmailRegistered = function(result, scope) {
+    scope.email_registered = result.exists;
+}

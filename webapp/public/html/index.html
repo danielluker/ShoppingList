@@ -31,33 +31,6 @@
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
 
-	<!-- Scripts -->
-
-	<!-- jQuery -->
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
-	<script src="{% static "js/lib/jquery.js" %}"></script>
-
-	<!-- Bootstrap Core JavaScript -->
-	<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
-	<script src="{% static "js/lib/bootstrap.js" %}"></script>
-
-	<!-- Angular Library -->
-	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
-	<script src="{% static "js/lib/angular.js" %}"></script>
-
-	<!-- Libraries -->
-    <script src="{% static "js/lib/js-cookie.js"%}"></script>
-
-    <!-- Custom JS -->
-<!--     <script src="{% static "js/controllers/objects/shoppingList.js" %}"></script> -->
-    <script src="{% static "js/app/settings.js" %}"></script>
-
-	<!-- Angular app script -->
-	<script src="{% static "js/app/shoppingList.js" %}"></script>
-
-	<!-- Angular frontend controller -->
-	<script src="{% static "js/controllers/index.js" %}"></script>
-
 </head>
 
 <body>
@@ -232,27 +205,32 @@
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							<i class="fa fa-times"></i>
+						</button>
 						<h2 class="text-center">Signup</h2>
 					</div>
 					<div class="modal-body">
 						<form id="signup_form" class="form col-md-12 center-block">
 							<div class="form-group">
-								<input data-ng-model="user.email" id="new_email"  type="email" class="form-control required" placeholder="Email" ng-blur="usernameCheck()" required=""  email-check="">
+								<input data-ng-model="user.email" id="new_email"  type="email" class="form-control required" placeholder="Email" ng-blur="usernameCheck()" email-check required>
 								<span ng-show="email_registered">Email already registered</span>
 							</div>
 							<div class="form-group">
-								<input data-ng-model="user.password1" id="password1" type="password" class="form-control required" placeholder="New Password"   password="" required="">
+								<input data-ng-model="user.password1" id="password1" type="password" class="form-control required" placeholder="New Password" ng-show="!email_registered" password required>
 							</div>
 							<div class="form-group">
-								<input data-ng-model="user.password2" id="password2" type="password" class="form-control required" placeholder="Confirm New Password"  match="user.password1" password="" required="">
+								<input data-ng-model="user.password2" id="password2" type="password" class="form-control required" placeholder="Confirm New Password"  match="user.password1" ng-show="!email_registered" password required>
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
-						<div class="col-md-12">
+						<div class="col-md-12" ng-show="!email_registered" tabindex="0">
 							<button class="btn btn-primary btn-block" ng-disabled="!validate()" ng-click="register()">Register</button>
 						</div>	
+						<div class="col-md-12" ng-show="email_registered" tabindex="0">
+							<button class="btn btn-primary btn-block" data-dismiss="modal" ng-click="forgotPassword()">Forgot Password?</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -261,7 +239,9 @@
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							<i class="fa fa-times"></i>
+						</button>
 						<h2 class="text-center">Login</h2>
 					</div>
 					<div class="modal-body">
@@ -271,21 +251,50 @@
 								<span ng-show="!email_registered">Email not registered</span>
 							</div>
 							<div class="form-group">
-								<input id="password" type="password" class="form-control input" placeholder="Password" password="" required="" ng-model="user.password">
+								<input id="password" type="password" class="form-control input" placeholder="Password" password="" required="" ng-model="user.password" ng-show="email_registered">
 							</div>
 						</form>
 					</div>
 					<div class="modal-footer">
 						<div class="col-md-12">
-							<button class="btn btn-primary btn-block" ng-disabled="!validate()" ng-click="login()">Sign in</button>
-						</div>	
+							<button class="btn btn-primary btn-block" ng-disabled="!validate()" ng-click="login()" ng-show="email_registered">Sign in</button>
+							<button class="btn btn-primary btn-block" data-dismiss="modal" ng-show="!email_registered">Return</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</footer>
 
-	<!-- Custom JS -->
+	<!-- Scripts -->
+
+	<!-- jQuery -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+	<script src="{% static "js/lib/jquery.js" %}"></script>
+
+	<!-- Bootstrap Core JavaScript -->
+	<!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+	<script src="{% static "js/lib/bootstrap.js" %}"></script>
+
+	<!-- Angular Library -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+	<script src="{% static "js/lib/angular.js" %}"></script>
+
+	<!-- Libraries -->
+    <script src="{% static "js/lib/js-cookie.js"%}"></script>
+
+    <!-- Custom JS -->
+<!--     <script src="{% static "js/controllers/objects/shoppingList.js" %}"></script> -->
 	<script src="{% static "js/app/index_script.js" %}"></script>
+    <script src="{% static "js/app/settings.js" %}"></script>
+
+	<!-- Angular app script -->
+	<script src="{% static "js/app/shoppingList.js" %}"></script>
+
+	<!-- Angular frontend controller -->
+	<script src="{% static "js/controllers/index.js" %}"></script>
+
+
+	
 </body>
 </html>

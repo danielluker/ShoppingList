@@ -1,0 +1,378 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<!--<![endif]-->
+<html lang="en" ng-app="shoppingList.newList">
+{% load staticfiles %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="ShoppingList dashboard">
+    <meta name="author" content="Daniel F. Luker">
+
+    <title>New List</title>
+
+    <!-- Bootstrap Core CSS -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="{% static "styles/css/bootstrap.css" %}" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="{% static "styles/css/landing-page.css" %}" rel="stylesheet">
+    <link href="{% static "styles/css/home.css" %}" rel="stylesheet">
+    <link href="{% static "styles/css/sticky-footer.css" %}" rel="stylesheet">
+
+    <!-- Timeline CSS -->
+    <link href="{% static "styles/css/new_list.css" %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
+    <link href="{% static "styles/font-awesome/css/font-awesome.min.css" %}" rel="stylesheet" type="text/css">
+    <!-- <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css"> -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    
+
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
+        <div class="container topnav">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-brand topnav btn btn-sm" style="background-color: transparent">
+                    <a href="/">ShoppingList</a>
+                </button>
+            </div>
+           
+            <ul class="nav navbar-top-links navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-envelope fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                            <ul class="dropdown-menu dropdown-messages" id="daniel">
+                                <div ng-repeat="message in messages">
+                                    <li>
+                                        <div class="message-body">
+                                            <div class="message-header">
+                                                <strong>{$ message.from $}</strong>
+                                                <span class="pull-right text-muted">
+                                                    <em>{$ message.date $}</em>
+                                                </span>
+                                            </div>
+                                            <div class="message-content">
+                                                {$ message.content $}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="divider"></li>
+                                </div>
+                                <li>
+                                    <a class="text-center" href="#">
+                                        <strong>Read All Messages</strong>
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        <!-- /.dropdown-messages -->
+                    </li>
+                    <!-- /.dropdown -->
+                    <li  class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-tasks fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-tasks">
+                            <li ng-repeat="task in tasks">
+                                <a href="#">
+                                    <div>
+                                        <p>
+                                            <strong>{$ task.title $}</strong>
+                                            <span class="pull-right text-muted">{$ task.completion $}</span>
+                                        </p>
+                                        <div class="progress progress-striped active">
+                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                                                <span class="sr-only">{$ task.status $}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="divider"></div>
+                            </li>
+                            <li>
+                                <a class="text-center" href="#">
+                                    <strong>See All Tasks</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-tasks -->
+                    </li>
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-alerts">
+                            <div ng-repeat="alert in alerts">
+                                <li>
+                                    <a href="#">
+                                        <div>
+                                            <i class="fa fa-comment fa-fw"></i> {$ alert.details $}
+                                            <span class="pull-right text-muted small">{$ alert.date $}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                            </div>
+                            <li>
+                                <a class="text-center" href="#">
+                                    <strong>See All Alerts</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-alerts -->
+                    </li>
+                    <!-- /.dropdown -->
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a ng-click="logout()" id='test'><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                    <!-- /.dropdown -->
+                </ul>
+                <!-- /.navbar-top-links -->
+
+
+        </div>
+        <!-- /.container -->
+    </nav>
+
+	<div id="wrapper">
+
+        <!-- Sidebar -->
+        <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li ng-repeat="control in controls">
+                            <a id='foo' href="{$ control.target $}">
+                                <i class="fa fa-dashboard fa-fw"></i>
+                                <span ng-class="{'arrow': Object.keys(controls.subcontrols).length > 0}">
+                                    {$ control.name $}
+                                </span>
+                            </a>
+                            <ul class="nav nav-second-level">
+                                <li ng-repeat="subcontrol in control.subcontrols">
+                                    <a href="{$ subcontrol.target $}">{$ subcontrol.name $}</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+        <!-- /Sidebar -->
+
+
+
+
+
+        <div id="page-wrapper" ng-controller="newListCtrl">
+        <!-- Main Page -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+                        <input class="form-control no-border" ng-model="newList.name">
+                    </h1>
+                </div>
+                <!-- /.col-lg-12 -->
+                <div class="divider"></div>
+            </div>
+
+            <!-- /.row -->
+            <div class="row">
+                <div class="container-fluid" >
+                    <div class="col-lg-9">
+                        <ul class="list-group">
+                            <li style="list-style-type: none;">
+                                <div class="container">
+                                    <form ng-submit="addItem()">
+                                        <div class="col-sm-3">
+                                            <input type="text" class="form-control" placeholder="item name" ng-model="itemName" id="itemName" ng-required="true">
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <input type="number" class="form-control" placeholder="#" ng-model="itemQuantity">
+                                        </div>
+                                        <div class="col-sm-1" id="add-to-list2">
+                                            <button class="close">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                            <li style="list-style-type: none;">
+                                <div class="container">
+                                    &nbsp;
+                                </div>
+                            </li>
+                            <li class="list-group-item" ng-repeat="element in newList">
+                                <div class="container">
+                                    <div class="col-sm-3">
+                                        <img src="{$ element.image $}" placeholder="product image">
+                                    </div>
+                                    <div class="col-sm-2 text-center">
+                                        {$ element.name $}
+                                    </div>
+                                    <div class="col-sm-1 text-center">
+                                        {$ element.quantity $}
+                                    </div>
+                                    <div class="col-sm-1 text-center">
+                                        <button class="close">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="col-lg-3 col-md-6">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="suggestion in suggestions">
+                                <div class="" ng-click="addToList(suggestion)">
+                                    <img src="{$ suggestion.image $}">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+
+
+        <!-- /#page-wrapper -->
+        <div class="push"></div>
+    </div>
+    <!-- /#wrapper -->
+    <div class="footer" ng-show="show_message_centre" >
+        <div class="container-fluid">
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-shopping-cart fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div id="new_items" class="huge">0</div>
+                                <div>Items in list</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row" ng-click="openMessages()">
+                            <div class="col-xs-3">
+                                <i class="fa fa-comments fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div id="messageCount" class="huge">0</div>
+                                <div>New Messages!</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#">
+                        <div class="panel-footer">
+                            <span class="pull-left">View Details</span>
+                            <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                            <div class="clearfix"></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <!-- {% load js %}
+    {% django_js_init %}
+    <script src="{% static "js/config.js" %}"></script>
+    <script src="{% static "js/require.js" %}"></script>
+    <script src="{% static "js/load_scripts.js" %}"></script> -->
+
+    <!-- jQuery -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> -->
+    <script src="{% static "js/lib/jquery.js" %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+    <script src="{% static "js/lib/bootstrap.js" %}"></script>
+
+    <!-- Libraries -->
+    <script src="{% static "js/lib/js-cookie.js"%}"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static "js/controllers/objects/shoppingList.js" %}"></script>
+    <script src="{% static "js/controllers/objects/message.js" %}"></script>
+    <script src="{% static "js/app/settings.js" %}"></script>
+
+
+    <!-- Angular Library -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script> -->
+    <script src="{% static "js/lib/angular.js" %}"></script>
+
+    <!-- Angular app script -->
+    <script src="{% static "js/app/shoppingList.js" %}"></script>
+
+    <!-- Angular frontend controller -->
+    <script src="{% static "js/controllers/newList.js" %}"></script>
+</body>
+</html>

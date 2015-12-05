@@ -18,9 +18,9 @@ app.config(function($interpolateProvider , $httpProvider) {
     $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 });
 
-app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
+app.controller('homeCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
 
-	$scope.controls = [
+	$rootScope.controls = [
 		{
 			name: 'Test 1',
 			link: '#',
@@ -45,7 +45,7 @@ app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
 		},
 	];
 
-	$scope.messages = [
+	$rootScope.messages = [
 		{
 			from: 'John Smith', 
 			date: 'Yesterday', 
@@ -98,17 +98,50 @@ app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
 		}
 	]
 
+	/*
+	 * Local Variables 
+	 */
+	$scope.show_message_centre = false;
+	$scope.currentList = [];
+	$scope.currentList.name = "";
+	$scope.itemName = "";
+	$scope.itemQuantity = "";
+	$scope.itemPrice = "$";
+
+
+	/*
+	 * Functions
+	 */
+
+	/***
+	 * Fetches the list from the database, and fills the "current list" 
+	 * panel with the contents
+	 * 
+	 * @param list: the name of the list to fetch
+	 * 
+	 * TODO: Generalize this to accept a query string
+	 */
 	$scope.populateList = function(list) {
 		// First, query the database for the new list
 		$scope.getList(list.name);
 		// Then, place it in $scope.currentList
 	}
 
+	/***
+	 * Fetches the function by name from the database, and assigns it
+	 * to the $scope variable "currentList"
+	 *
+	 * @param name: name of the list to fetch
+	 *
+	 * TODO define an error handler
+	 * TODO Generalize this to accept a query string 
+	 */
 	$scope.getList = function(name) {
 		var queryString = 'list_name=' + name
 		$http.post('get_list/', queryString).then(function(result) {
 			var res = JSON.parse(result.data.list)
 			$scope.currentList = []
+			$scope.currentList.name = res.name
 			for(var el in res.contents){
 				$scope.currentList.push({
 					name: el,
@@ -121,30 +154,31 @@ app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
 		);
 	}
 
+
+	/***
+	 * Performs a logout of the current user, and redirects to
+	 * the next page, as defined by the server (logout/goodbye page, or homepage)
+	 */
 	$scope.logout = function() {
-		$.get('/logout', function(result) {
-
-		}).done(function(result) {
-			console.log(result)
+		$http.get('/logout').then(function(result) {
 			window.location.href = result['next']
-		})
+		});
 	}
 
-	$scope.openMessages = function() {
-		// window.location.href = "messages/"
-	}
 
-	$scope.show_message_centre = false;
-
+	/***
+	 * Toggles the bar at the bottom of the screen which provides IM/messaging
+	 * capabilities
+	 */
 	$scope.toggleMessageCentre = function() {
 		$scope.show_message_centre = !$scope.show_message_centre;
 	}
 
-	$scope.currentList = [];
-	$scope.itemName = "";
-	$scope.itemQuantity = "";
-	$scope.itemPrice = "$";
 
+	/***
+	 * Adds an item from the bottom row in the "current list" panel to the 
+	 * "currentList" variable. Performs input validation as well.
+	 */
 	$scope.addItem = function() {
 		if($scope.itemName.trim().length < 1){
 			$('#itemName').css("background-color", "rgba(255, 0, 0, 0.3)");
@@ -162,12 +196,14 @@ app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
 		$scope.itemPrice = "$";
 	};
 
+
+	/***
+	 * Removes an item from the "currentList" scope variable.
+	 */
 	$scope.removeItem = function(item) {
-		console.log("in here", item)
 		var iter = 0;
 		for (var i = 0; i < $scope.currentList.length; i++) {
 			if($scope.currentList[i].hashkey == item.hashkey){
-				console.log("about to splice from " + iter + " to " + (iter + 1) );
 				$scope.currentList.splice(iter, 1);
 				return;
 			}
@@ -175,7 +211,22 @@ app.controller('homeCtrl', ['$scope', '$http', function($scope, $http) {
 		}
 	};
 
-	$scope.getList('Groceries');
+
+	/***
+	 *
+	 */
+
+
+	/***
+	 * Initialization
+	 */
+
+	/*
+	 * Ideally, we want to initialize to the 'default' list for the current user.
+	 */
+
+	var DEFAULT_LIST = 'Groceries';
+	$scope.getList(DEFAULT_LIST);
 
 }]);
 

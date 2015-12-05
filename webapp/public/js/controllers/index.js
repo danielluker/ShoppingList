@@ -109,9 +109,18 @@ app.directive('usernameCheck', [function() {
     }
 }])
 
+app.config(function($interpolateProvider , $httpProvider) {
+    $interpolateProvider.startSymbol('{$');
+    $interpolateProvider.endSymbol('$}');
+
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+});
+
 app.controller(
-    'loginCtrl', ['$scope',
-        function($scope) {
+    'loginCtrl', ['$scope', '$http',
+        function($scope, $http) {
             $scope.meta = "loginCtrl"
             $scope.user = {
                 email: "",
@@ -132,10 +141,9 @@ app.controller(
 
             $scope.usernameCheck = function(mode) {
                 var inputEmail = $('#old_email').val()
-                $.post('/email/', {
-                    'email': inputEmail,
-                }, function(result) {
-                    $scope.email_registered = $scope.email_registered_flag = result.exists;
+                var queryString = 'email=' + inputEmail
+                $http.post('/email/', queryString).then(function(result) {
+                    $scope.email_registered = $scope.email_registered_flag = result.data.exists;
                     console.log("email_registered", $scope.email_registered)
                     console.log("email_registered_flag", $scope.email_registered_flag)
                 });
@@ -160,8 +168,8 @@ app.controller(
 );
 
 app.controller(
-    'signupCtrl', ['$scope',
-        function($scope) {
+    'signupCtrl', ['$scope', '$http',
+        function($scope, $http) {
             $scope.meta = "signupCtrl"
             $scope.user = {
                 email: "",
@@ -183,29 +191,30 @@ app.controller(
             }
             $scope.usernameCheck = function(mode) {
                 var inputEmail = $('#new_email').val()
-                $.post('/email/', {
-                    'email': inputEmail,
-                }, function(result) {
-                    $scope.email_registered = $scope.email_registered_flag = result.exists; 
+                var queryString = 'email=' + inputEmail
+                $http.post('/email/', queryString)
+                .then(function(result) {
+                    console.log("received result from /email/ ", result);
+                    $scope.email_registered = $scope.email_registered_flag = result.data.exists; 
                 });
             }
             $scope.register = function() {
             	$scope.user.email = data.new_email;
             	$scope.user.password1 = data.password1;
             	$scope.user.password2 = data.password2;
-                $.post(
-                    'register/', 
-                    { 
-                    	user: JSON.stringify({
+                var dataString = 'user=' + JSON.stringify({
                             email: $scope.user.email,
                             password: $scope.user.getPassword(),
-                        }),
-                    },
-                    function(result) {
+                        });
+                $http.post('register/', dataString)
+                .then(function(result) {
                     	if(result.valid)
                     		window.location.href = result['next']
                     }
-                )
+                );
+            }
+            $scope.forgotPassword = function() {
+                window.location.href = "/forgot_password";
             }
         }
     ]

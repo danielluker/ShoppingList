@@ -8,6 +8,10 @@ body {
     background-color: #f8f8f8;
 }
 
+#add-to-list {
+    padding-top: 14px;
+}
+
 #wrapper {
     width: 100%;
 }

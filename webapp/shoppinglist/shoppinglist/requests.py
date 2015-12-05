@@ -7,6 +7,9 @@ import json
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from shoppinglist.models import ShoppingList
 from shoppinglist.lib.util import JsonResponse
@@ -71,13 +74,18 @@ def check_email(request):
     if email_check is None:
         # return JsonResponse({'valid': False})
         return HttpResponseRedirect('/')
-    # result = User.objects.get(email__exact=email_check) is not None
-    result = True
+    try:
+        result = User.objects.get(email__exact=email_check) is not None
+    except ObjectDoesNotExist:
+        result = False
+    except MultipleObjectsReturned:
+        result = True
+    # result = True
     return JsonResponse({'exists': result})
 
 
 @login_required
 def get_message_count(request):
     """ Gets the number of unread/new messages from the database """
-    user = request.user.username
+    # user = request.user.username
     return JsonResponse({'message_count': 5})

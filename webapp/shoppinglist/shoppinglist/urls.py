@@ -26,9 +26,11 @@ urlpatterns = [
     url(r'^home/save/', requests.save_list),
     url(r'^home/get_all_lists/', requests.get_all_lists),
     url(r'^home/get_list', requests.get_list),
+    url(r'^home/new_list', views.new_list, name='new_list'),
     url(r'^djangojs/', include('djangojs.urls')),
     url(r'^email/', requests.check_email),
     url(r'^register/', auth.register_user),
     url(r'^login/', auth.login_user),
     url(r'^logout/', auth.logout_user),
+    url(r'^forgot_password/$', views.forgot_password),
 ]

@@ -1,0 +1,23 @@
+.no-border {
+	outline: 0;
+	line-height: 0;
+	background: transparent;
+	border: none;
+	box-shadow: none;
+	box-sizing: none;
+	transition: none;
+	font-size: inherit;
+	margin-top: inherit;
+	height: inherit;
+}
+
+.no-border:focus {
+	outline: 0;
+	border: none;
+	box-shadow: none;
+	border-color: transparent;
+}
+
+#add-to-list2 {
+    padding-top: 6.5px;
+}

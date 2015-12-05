@@ -33,7 +33,7 @@ $(function() {
     }
 });
 
-
+// TODO: not sure if this method is still necessary, angular has something in $httpProvider that takes care of this
 // To enable Cross-site request forgery protection (csrf)
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection

@@ -55,7 +55,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'shoppinglist.urls'
 
-LOGIN_URL = 'login/'
+LOGIN_URL = 'home'
 
 TEMPLATES = [
     {

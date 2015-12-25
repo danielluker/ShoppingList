@@ -6,18 +6,31 @@
 import json
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-# from django.http import HttpResponseRedirect
-from shoppinglist.lib.util import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
-# from . import views
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+
+from shoppinglist.models import UserObject
+from shoppinglist.lib.util import JsonResponse
+
+# from djutils.decorators import async
 
 
 @ensure_csrf_cookie
 def register_user(request):
     """ Saves the user onto the database """
     usrnm, password, email = retrieve_user_password_email(request)
+    try:
+        result = User.objects.get(email__exact=email) is not None
+    except ObjectDoesNotExist:
+        result = False
+    except MultipleObjectsReturned:
+        result = True
+    if result is True:
+        return JsonResponse({'valid': False})
     n_user = User.objects.create_user(usrnm, email, password)
     n_user.save()
+    n_user_obj = UserObject(user=n_user, shoppinglists=[])
+    n_user_obj.save()
     new_user = authenticate(username=usrnm, password=password)
     if new_user is not None and new_user.is_active:
         login(request, new_user)
@@ -35,6 +48,7 @@ def login_user(request):
     if _user is not None:
         if _user.is_active:
             login(request, _user)
+            load_data(request, _user)
             return JsonResponse({
                 'valid': True,
                 'next': '/home',
@@ -47,6 +61,13 @@ def login_user(request):
         return JsonResponse({'valid': False})
         # Wrong username/password
         # return views.home(request)
+
+
+# @async
+def load_data(request, user):
+    """ Loads all necessary data from the database into the current session """
+    # request.session['recommend'] = Graph.objects.get(user__exact=user.id)
+    pass
 
 
 def retrieve_password_email(request):

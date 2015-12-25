@@ -43,6 +43,12 @@ class Graph(object):
         """ Checks if the value is contained in the graph """
         return value in self.__data
 
+    def get_relationships(self, value):
+        """ Retrieves the neighbours of value """
+        if not self.contains(value):
+            raise LookupError("Item not in graph", self, value)
+        return self.__data[value].get_neighbours()
+
     def __str__(self):
         result = ""
         for value in self.__data:
@@ -66,4 +72,6 @@ class _Node(object):
 
     def get_neighbours(self):
         """ Fetches the map of (neighbours, weight) sorted by weight """
-        return sorted(self.__adjacent.items(), key=operator.itemgetter(1))
+        result = sorted(self.__adjacent.items(), key=operator.itemgetter(1))
+        result.reverse()
+        return result

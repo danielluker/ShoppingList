@@ -22,6 +22,15 @@ var data = {
 
 }
 
+app.config(function($interpolateProvider , $httpProvider) {
+    $interpolateProvider.startSymbol('{$');
+    $interpolateProvider.endSymbol('$}');
+
+    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
+    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+    $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+});
+
 app.directive('password', function() {
     return {
         require: 'ngModel',
@@ -84,43 +93,34 @@ app.directive('emailCheck', [function() {
     }
 }]);
 
-app.directive('usernameCheck', [function() {
-    return {
-        require: 'ngModel',
-        link: function(scope, elem, attrs, ctrl) {
-            ctrl.$asyncValidators.usernameCheck = function(modelValue, viewValue) {
-                var inputEmail = viewValue;
-                return $.post("/email", {
-                        'email': inputEmail,
-                    }, function() {
-                        // on success
-                    })
-                    .done(function() {
-                        // second on success
-                    })
-                    .fail(function() {
-                        return $q.reject("email already exists")
-                    })
-                    .always(function() {
-                        // finished
-                    })
-            }
-        }
-    }
-}])
-
-app.config(function($interpolateProvider , $httpProvider) {
-    $interpolateProvider.startSymbol('{$');
-    $interpolateProvider.endSymbol('$}');
-
-    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
-    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-    $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
-});
+// app.directive('usernameCheck', [function() {
+//     return {
+//         require: 'ngModel',
+//         link: function(scope, elem, attrs, ctrl) {
+//             ctrl.$asyncValidators.usernameCheck = function(modelValue, viewValue) {
+//                 var inputEmail = viewValue;
+//                 return $http.post("/email", {
+//                         'email': inputEmail,
+//                     }, function() {
+//                         // on success
+//                     })
+//                     .done(function() {
+//                         // second on success
+//                     })
+//                     .fail(function() {
+//                         return $q.reject("email already exists")
+//                     })
+//                     .always(function() {
+//                         // finished
+//                     })
+//             }
+//         }
+//     }
+// }])
 
 app.controller(
-    'loginCtrl', ['$scope', '$http',
-        function($scope, $http) {
+    'loginCtrl', ['$scope', '$http', '$cookies',
+        function($scope, $http, $cookies) {
             $scope.meta = "loginCtrl"
             $scope.user = {
                 email: "",
@@ -154,15 +154,21 @@ app.controller(
             $scope.login = function() {
             	$scope.user.email = data.old_email;
             	$scope.user.password = data.password;
-            	$.post(
-            		'login/',
-            		{ user: JSON.stringify($scope.user) },
-            		function(result) {
-            			if(result.valid)
-            				window.location.href = result['next']
+                var queryString = 'user=' + JSON.stringify($scope.user)
+            	$http.post('/login/', queryString).then(function(result) {
+            			if(result.data.valid)
+            				window.location.href = result.data['next']
             		}
             	)
             }
+            // $scope.show_login = function() {
+            //     var cookie = Cookies.get("show_login")
+            //     if(cookie != null && cookie == "true"){
+            //         var modalObj = $("#loginModal").modal();
+            //         modalObj.modal("show");
+            //     }
+            //     Cookies.set("show_login", "false");
+            // }
         }
     ]
 );
@@ -187,7 +193,7 @@ app.controller(
              */
             $scope.email_registered_flag = true;
             $scope.validate = function() {
-                return valid.new_email && valid.password1 && valid.password2 && (!$scope.email_registered) && (!scope.email_registered_flag);
+                return valid.new_email && valid.password1 && valid.password2 && (!$scope.email_registered) && (!$scope.email_registered_flag);
             }
             $scope.usernameCheck = function(mode) {
                 var inputEmail = $('#new_email').val()
@@ -206,12 +212,18 @@ app.controller(
                             email: $scope.user.email,
                             password: $scope.user.getPassword(),
                         });
-                $http.post('register/', dataString)
+                // TODO: Loading spinner show
+                $http.post('/register/', dataString)
                 .then(function(result) {
-                    	if(result.valid)
-                    		window.location.href = result['next']
+                        console.log(result)
+                        // TODO: Spinner hide
+                    	if(result.data.valid)
+                    		window.location.href = result.data['next']
+
                     }
-                );
+                ,function(response) {
+                    // Error, spinner hide
+                });
             }
             $scope.forgotPassword = function() {
                 window.location.href = "/forgot_password";

@@ -41,8 +41,8 @@ function csrfSafeMethod(method) {
 };
 
 var csrftoken = Cookies.get('csrftoken');
-console.log("csrftoken = ", csrftoken);
-console.log("applying csrf protection");
+// console.log("csrftoken = ", csrftoken);
+// console.log("applying csrf protection");
 if(csrftoken == undefined) {
     alert("Cannot receive the csrf token. Please contact the system admin.\n\n\n\tError 10");
 }

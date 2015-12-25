@@ -20,94 +20,92 @@ app.config(function($interpolateProvider , $httpProvider) {
 
 app.controller('homeCtrl', ['$rootScope', '$scope', '$http', function($rootScope, $scope, $http) {
 
-	$rootScope.controls = [
-		{
-			name: 'Test 1',
-			link: '#',
-		},
-		{
-			name: 'Test 2',
-			link: '#',
-			subcontrols: [
-				{
-					name: 'test1',
-					link: '#',
-				},
-				{
-					name: 'test2',
-					link: '#',
-				}
-			]
-		},
-		{
-			name: 'Test 3',
-			link: '#',
-		},
-	];
+	// [
+	// 	{
+	// 		name: 'Test 1',
+	// 		link: '#',
+	// 	},
+	// 	{
+	// 		name: 'Test 2',
+	// 		link: '#',
+	// 		subcontrols: [
+	// 			{
+	// 				name: 'test1',
+	// 				link: '#',
+	// 			},
+	// 			{
+	// 				name: 'test2',
+	// 				link: '#',
+	// 			}
+	// 		]
+	// 	},
+	// 	{
+	// 		name: 'Test 3',
+	// 		link: '#',
+	// 	},
+	// ];
 
-	$rootScope.messages = [
-		{
-			from: 'John Smith', 
-			date: 'Yesterday', 
-			content:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
-			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
-		},
-		{
-			from: 'Maria Gonzalez',
-			date: 'Tuesday',
-			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
-			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
-		},
-		{
-			from: 'Daniel Perez',
-			date: '11/13/2015',
-			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
-			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
-		},
-	];
+	
+	// {
+	// 	sender: 'John Smith', 
+	// 	date: 'Yesterday', 
+	// 	content:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+	// 	'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+	// },
+	// {
+	// 	sender: 'Maria Gonzalez',
+	// 	date: 'Tuesday',
+	// 	content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+	// 	'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+	// },
+	// {
+	// 	sender: 'Daniel Perez',
+	// 	date: '11/13/2015',
+	// 	content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+	// 	'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+	// },
 
-	$scope.timeline = [
-		{
-			title: "Test1",
-			date: 'Yesterday',
-			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
-			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
-		},
-		{
-			title: "Test2",
-			date: 'Yesterday',
-			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
-			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
-		},
-		{
-			title: "Test3",
-			date: 'Yesterday',
-			content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
-			'Libero laboriosam dolor perspiciatis omnis exercitationem.',
-		}
-	]
 
-	$scope.myLists = [
-		{
-			name: "Groceries",
-			size: 5,
-		},
-		{
-			name: "Christmas",
-			size: 12,
-		}
-	]
+	
+
+
+		// {
+		// 	title: "Test1",
+		// 	date: 'Yesterday',
+		// 	content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+		// 	'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+		// },
+		// {
+		// 	title: "Test2",
+		// 	date: 'Yesterday',
+		// 	content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+		// 	'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+		// },
+		// {
+		// 	title: "Test3",
+		// 	date: 'Yesterday',
+		// 	content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. ' +
+		// 	'Libero laboriosam dolor perspiciatis omnis exercitationem.',
+		// }
+
+
+	/*
+	 * Variables to be shared over several apps
+	 */
+	$rootScope.messages = [];
+	$rootScope.controls = [];
 
 	/*
 	 * Local Variables 
 	 */
 	$scope.show_message_centre = false;
+	$scope.myLists =[];
 	$scope.currentList = [];
 	$scope.currentList.name = "";
 	$scope.itemName = "";
 	$scope.itemQuantity = "";
 	$scope.itemPrice = "$";
-
+	$scope.timeline = [];
 
 	/*
 	 * Functions
@@ -136,22 +134,68 @@ app.controller('homeCtrl', ['$rootScope', '$scope', '$http', function($rootScope
 	 * TODO define an error handler
 	 * TODO Generalize this to accept a query string 
 	 */
-	$scope.getList = function(name) {
-		var queryString = 'list_name=' + name
-		$http.post('get_list/', queryString).then(function(result) {
-			var res = JSON.parse(result.data.list)
-			$scope.currentList = []
-			$scope.currentList.name = res.name
-			for(var el in res.contents){
-				$scope.currentList.push({
-					name: el,
-					quantity: res.contents[el],
-				})
-			}
-		}, function(error){
+	 $scope.getList = function(name) {
+	 	$http({	 		
+	 		method: 'GET',
+	 		url: 'get_list/', 
+	 		params: {list_name: name},
+	 		}).then(function(result) {
+	 			var res = JSON.parse(result.data.list)
+	 			$scope.currentList = []
+	 			$scope.currentList.name = res.name
+	 			for(var el in res.contents){
+	 				$scope.currentList.push({
+	 					name: el,
+	 					quantity: res.contents[el],
+	 				})
+	 			}
+	 		}, function(error){
 
 			}
 		);
+	}
+
+
+	/***
+	 * Fetches all the shopping lists for the current user
+	 */
+	$scope.getAllLists = function() {
+		$http.get('get_all_lists')
+		.then(function(response) { 
+			$scope.myLists = JSON.parse(response.data.all_lists);
+		})
+	}
+
+
+	/***
+	 * Fetches the user's messages
+	 */
+	$scope.getMessages = function() {
+		$http.get('get_messages')
+		.then(function(response) {
+			$rootScope.messages = JSON.parse(response.data.messages);
+		})
+	}
+
+
+	/***
+	 * Retrieves the timeline for the current user
+	 */
+	$scope.getTimeline = function() {
+		$http.get('get_timeline')
+		.then(function(result) { 
+			$scope.timeline = JSON.parse(result.data.timeline)
+		});
+	}
+
+
+	/***
+	 * Fetches the controls for the sidebar
+	 */
+	$scope.getControls = function() {
+		$http.get('layout/controls').then(function(result) {
+			$rootScope.controls = JSON.parse(result.data.controls);
+		})
 	}
 
 
@@ -226,7 +270,11 @@ app.controller('homeCtrl', ['$rootScope', '$scope', '$http', function($rootScope
 	 */
 
 	var DEFAULT_LIST = 'Groceries';
+
+	$scope.getMessages();
 	$scope.getList(DEFAULT_LIST);
+	$scope.getControls();
+	$scope.getTimeline();
 
 }]);
 

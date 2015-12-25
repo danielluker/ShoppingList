@@ -11,29 +11,31 @@ from django.contrib.auth.models import User
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
-from shoppinglist.models import ShoppingList
+from shoppinglist.models import ShoppingList, UserObject
 from shoppinglist.lib.util import JsonResponse
 
 from . import views
 
 POST = "POST"
+GET = "GET"
 
 
 @login_required
 def get_all_lists(request):
     """ Retrieves all of the lists for a specified user """
-    # TODO
-    # print(request)
-    # return [['shampoo', 'rice', 'pizza', 'canteloupe', ]]
-    pass
+    result = UserObject.objects.get(user__exact=request.user).next()
+    return JsonResponse(result)
 
 
 @login_required
 def get_list(request):
     """ Retrieves a single list """
-    if request.method != POST:
-        raise Exception("Call to this method must be post!", request)
-    name = request.POST.get('list_name')
+    if request.method == POST:
+        name = request.POST.get('list_name')
+    elif request.method == GET:
+        name = request.GET.get('list_name')
+    else:
+        raise Exception("Call to this method must be post or get!", request)
     # result = ShoppingList.objects.get(name__exact=name).next()
     ## DEV
     if name == 'Groceries':
@@ -47,6 +49,8 @@ def get_list(request):
         result.contents['Wine'] = 2
         result.contents['Crackers'] = 4
         result.contents['Pudding'] = 1
+    else:
+        result = ShoppingList(name=name)
     return JsonResponse({'list': json.dumps({
         'name': name,
         'contents': result.contents
@@ -87,5 +91,36 @@ def check_email(request):
 @login_required
 def get_message_count(request):
     """ Gets the number of unread/new messages from the database """
-    # user = request.user.username
-    return JsonResponse({'message_count': 5})
+    messages = _get_or_fetch_messages(request)
+    return JsonResponse({'message_count': messages.length()})
+
+
+@login_required
+def get_user_recommendations(request):
+    """ Retrieves the map containing the recommendations for this user """
+    product = request.GET.get('product')
+    request.session['recommendations'].get_relationships(product)
+
+
+@login_required
+def get_messages(request):
+    """ Retrieves all the messages for this user """
+    return JsonResponse({'messages': _get_or_fetch_messages(request)})
+
+
+@login_required
+def get_timeline(request):
+    """ Retrieves the timeline for the currently logged in user """
+    timeline = UserObject.objects.get(user__exact=request.user).timeline
+    return JsonResponse({'timeline': timeline})
+
+
+def _get_or_fetch_messages(request, force=False):
+    """ Helper method to check if messages exist in the current session,
+        and to retrieve them from the database if they're not loaded
+    """
+    messages = request.session['messages']
+    if messages is None or force:
+        messages = UserObject.objects.get(user__exact=request.user).messages
+        request.session['messages'] = messages
+    return messages

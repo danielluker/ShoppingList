@@ -93,31 +93,15 @@ DATABASES = {
         'NAME': 'db',
 
         # """ Online dev """
-        # 'ENGINE': 'django_mongodb_engine',
-        # 'NAME': 'shopping_list',
-        # 'USER': 'dluker',
-        # 'PASSWORD': 'ekw-kJC-h7Y-Hh2',
-        # 'HOST': 'ds053794.mongolab.com',
-        # 'PORT': '53794',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        # 'ENGINE': '',
-    }
+        #'ENGINE': 'django_mongodb_engine',
+        #'NAME': 'shopping_list',
+        #'USER': 'dluker',
+        #'PASSWORD': 'ekw-kJC-h7Y-Hh2',
+        #'HOST': 'ds053794.mongolab.com',
+        #'PORT': '53794',
+    },
 }
 
-# SESSION_ENGINE = 'mongoengine.django.sessions'
-# Mongo DB settings
-# import mongoengine
-# _MONGODB_USER = 'dluker'
-# _MONGODB_PASSWD = 'ekw-kJC-h7Y-Hh2'
-# _MONGODB_HOST = 'ds053794.mongolab.com:53794'
-# _MONGODB_NAME = 'shopping_list'
-# _MONGODB_DATABASE_HOST = \
-#     'mongodb://%s:%s@%s/%s' \
-#     % (_MONGODB_USER, _MONGODB_PASSWD, _MONGODB_HOST, _MONGODB_NAME)
-# mongoengine.connect(_MONGODB_NAME, host=_MONGODB_DATABASE_HOST)
-# AUTHENTICATION_BACKENDS = (
-#     'mongoengine.django.auth.MongoEngineBackend',
-# )
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

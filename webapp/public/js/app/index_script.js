@@ -9,5 +9,4 @@ function show_login() {
 	Cookies.set("show_login", "false");
 }
 
-
 show_login();

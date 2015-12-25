@@ -9,6 +9,9 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
+from shoppinglist.lib.util import JsonResponse
+
+from shoppinglist.models import UserObject
 
 # DEBUG
 # import pdb
@@ -50,3 +53,12 @@ def home(request):
 def new_list(request):
     """ Show the page to create new list """
     return render_to_response('new_list.html', RequestContext(request))
+
+
+@login_required
+def home_layout(request, layout):
+    """ Fetch the required layout """
+    if layout == 'controls':
+        result = UserObject.objects.get(user__exact=request.user).layout
+        return JsonResponse({'controls': result})
+    return None
